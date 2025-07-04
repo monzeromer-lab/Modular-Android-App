@@ -1,0 +1,141 @@
+import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    title: "Modular Android App";
+    width: 400px;
+    height: 600px;
+    
+    // Business logic state
+    property <string> status_message: "Ready";
+    property <int> counter: 0;
+    property <string> sensor_data: "No sensor data";
+    property <string> notification_text: "No notifications";
+    
+    // API callbacks
+    callback button_clicked(string);
+    // Removed text_changed callback
+    
+    VerticalBox {
+        Text {
+            text: "Modular Android App";
+            font-size: 24px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        
+        Text {
+            text: "Slint UI with Business Logic";
+            font-size: 16px;
+            horizontal-alignment: center;
+            color: #666;
+        }
+        
+        // Status section
+        VerticalBox {
+            Text {
+                text: "Status: " + root.status_message;
+                font-size: 14px;
+                color: #333;
+            }
+            
+            HorizontalBox {
+                Text { text: "Counter: "; }
+                Text { text: root.counter; }
+                Button {
+                    text: "Increment";
+                    clicked => {
+                        root.counter += 1;
+                        root.button_clicked("increment");
+                    }
+                }
+            }
+        }
+        
+        // Sensor data section
+        VerticalBox {
+            Text {
+                text: "Sensor Data";
+                font-size: 18px;
+                font-weight: 600;
+            }
+            
+            Text {
+                text: root.sensor_data;
+                font-size: 14px;
+                color: #333;
+            }
+        }
+        
+        // Notifications section
+        VerticalBox {
+            Text {
+                text: "Notifications";
+                font-size: 18px;
+                font-weight: 600;
+            }
+            
+            Text {
+                text: root.notification_text;
+                font-size: 14px;
+                color: #333;
+            }
+        }
+        
+        // Input section
+        VerticalBox {
+            Text {
+                text: "Input Test";
+                font-size: 18px;
+                font-weight: 600;
+            }
+            
+            LineEdit {
+                placeholder-text: "Enter text...";
+                // No callback here
+            }
+        }
+        
+        // Action buttons
+        VerticalBox {
+            Text {
+                text: "Actions";
+                font-size: 18px;
+                font-weight: 600;
+            }
+            
+            Button {
+                text: "Send Notification";
+                clicked => {
+                    root.button_clicked("send_notification");
+                }
+            }
+            
+            Button {
+                text: "Update Sensors";
+                clicked => {
+                    root.button_clicked("update_sensors");
+                }
+            }
+            
+            Button {
+                text: "Call Native API";
+                clicked => {
+                    root.button_clicked("native_api");
+                }
+            }
+        }
+    }
+    
+    // Update functions called from native code
+    function update_sensor_data(data: string) {
+        root.sensor_data = data;
+    }
+    
+    function add_notification(notification: string) {
+        root.notification_text = notification;
+    }
+    
+    function update_status(message: string) {
+        root.status_message = message;
+    }
+} 
